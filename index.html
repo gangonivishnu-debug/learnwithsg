@@ -1,537 +1,1050 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Just J Officials | Where Art Meets Fashion</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- AOS Animation Library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn with SG | 3D Interactive Practical & Travel Hub</title>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brandPink: '#FF2A7A',
-                        brandPurple: '#8A2BE2',
-                        brandGold: '#FFD700',
-                        brandCyan: '#00E5FF',
-                        darkBg: '#09090E',
-                        cardBg: '#12121A'
-                    },
-                    fontFamily: {
-                        serif: ['Cinzel', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              violet: '#8B5CF6',
+              cyan: '#06B6D4',
+              amber: '#F59E0B',
+              rose: '#F43F5E',
+              darkBg: '#0B0F19',
+              cardBg: 'rgba(17, 24, 39, 0.75)'
             }
+          },
+          animation: {
+            'float-slow': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(2deg)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.3', filter: 'blur(25px)' },
+              '50%': { opacity: '0.7', filter: 'blur(35px)' },
+            }
+          }
         }
-    </script>
-    
-    <style>
-        body {
-            background-color: #09090E;
-            color: #F3F4F6;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-        }
+      }
+    }
+  </script>
 
-        /* Vibrant Multi-Color Gradient Text */
-        .vibrant-gradient-text {
-            background: linear-gradient(135deg, #FF2A7A 0%, #FFD700 50%, #00E5FF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Three.js for 3D Graphics & Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-        .gold-neon-text {
-            background: linear-gradient(135deg, #FFF099 0%, #FFD700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  <!-- Custom Styling & 3D Tilt CSS -->
+  <style>
+    body {
+      background-color: #0B0F19;
+      color: #F3F4F6;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      overflow-x: hidden;
+      perspective: 1000px;
+    }
 
-        /* 3D Card Hover Depth Setup */
-        .perspective-card {
-            perspective: 1000px;
-        }
-        .card-3d-inner {
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-            transform-style: preserve-3d;
-        }
-        .perspective-card:hover .card-3d-inner {
-            box-shadow: 0 20px 40px rgba(255, 42, 122, 0.25), 0 0 20px rgba(0, 229, 255, 0.2);
-        }
+    /* Glassmorphism & 3D Tilt Effect */
+    .glass-card-3d {
+      background: rgba(17, 24, 39, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transform-style: preserve-3d;
+      transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card-3d:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 20px 35px -10px rgba(139, 92, 246, 0.3);
+    }
 
-        /* Glow Accents */
-        .glow-pink {
-            box-shadow: 0 0 25px rgba(255, 42, 122, 0.4);
-        }
-    </style>
+    /* Neon Gradient Text */
+    .neon-text {
+      background: linear-gradient(135deg, #06B6D4 0%, #8B5CF6 50%, #F43F5E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 3D Floating Canvas Overlay */
+    #canvas3d {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    /* Custom Seat Selection Box */
+    .seat-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .seat-available {
+      background-color: rgba(31, 41, 55, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #D1D5DB;
+    }
+    .seat-available:hover {
+      border-color: #06B6D4;
+      color: #06B6D4;
+      transform: scale(1.1);
+    }
+    .seat-selected {
+      background-color: #8B5CF6 !important;
+      border-color: #8B5CF6 !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.8);
+    }
+    .seat-booked {
+      background-color: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #EF4444;
+      cursor: not-allowed;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0F19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F2937;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8B5CF6;
+    }
+  </style>
 </head>
-<body class="antialiased selection:bg-brandPink selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-violet selection:text-white">
 
-    <!-- Navigation Bar -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/10 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#home" class="font-serif text-2xl sm:text-3xl font-extrabold tracking-wider vibrant-gradient-text">
-                Just J Officials
-            </a>
+  <!-- BACKGROUND GLOW ORBS -->
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-brand-violet/20 rounded-full animate-pulse-glow pointer-events-none -z-10"></div>
+  <div class="fixed bottom-10 right-10 w-96 h-96 bg-brand-cyan/20 rounded-full animate-pulse-glow pointer-events-none -z-10" style="animation-delay: 1.5s;"></div>
 
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex space-x-8 text-sm font-semibold tracking-wide">
-                <a href="#home" class="hover:text-brandPink transition-colors">Home</a>
-                <a href="#about" class="hover:text-brandCyan transition-colors">About Us</a>
-                <a href="#process" class="hover:text-brandGold transition-colors">Behind the Brush</a>
-                <a href="#gallery" class="hover:text-brandPink transition-colors">Gallery</a>
-                <a href="#contact" class="hover:text-brandCyan transition-colors">Contact Us</a>
-            </nav>
+  <!-- GLOBAL HEADER / NAVIGATION -->
+  <header class="sticky top-0 z-50 glass-card-3d border-b border-gray-800/80 px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="#" onclick="switchTab('home')" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-cyan via-brand-violet to-brand-rose flex items-center justify-center text-white font-black text-xl shadow-lg shadow-brand-violet/30 group-hover:rotate-12 transition-transform">
+          SG
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight neon-text">Learn with SG</span>
+          <span class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Interactive 3D Portal</span>
+        </div>
+      </a>
 
-            <a href="#contact" class="hidden md:inline-flex items-center px-6 py-2.5 rounded-full bg-gradient-to-r from-brandPink via-brandPurple to-brandCyan text-white font-bold text-sm shadow-lg hover:brightness-110 transition-all duration-300">
-                Order Custom Art
-            </a>
+      <!-- Global Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-md relative">
+        <div class="relative w-full">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input 
+            type="text" 
+            id="globalSearchInput" 
+            oninput="handleGlobalSearch(this.value)"
+            placeholder="Search lab manuals or bus routes..." 
+            class="w-full bg-gray-900/80 border border-gray-700/60 rounded-full pl-10 pr-4 py-1.5 text-sm focus:outline-none focus:border-brand-violet transition-all text-gray-200 placeholder-gray-500"
+          >
+        </div>
+        <div id="searchResultsDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50"></div>
+      </div>
 
-            <!-- Mobile Menu Button -->
-            <button id="menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
-                <i class="fa-solid fa-bars text-2xl"></i>
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-1 font-medium text-sm">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg text-brand-violet bg-brand-violet/10 font-semibold transition-all">
+          <i class="fa-solid fa-house mr-1"></i> Home
+        </button>
+        <button onclick="switchTab('manuals')" id="nav-manuals" class="nav-btn px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/60 transition-all">
+          <i class="fa-solid fa-book-open mr-1"></i> Lab Manuals
+        </button>
+        <button onclick="switchTab('bus')" id="nav-bus" class="nav-btn px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/60 transition-all relative">
+          <i class="fa-solid fa-bus mr-1 text-brand-cyan"></i> Bus Tickets
+          <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-rose opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-rose"></span>
+          </span>
+        </button>
+        <button onclick="switchTab('career')" id="nav-career" class="nav-btn px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/60 transition-all">
+          <i class="fa-solid fa-chart-line mr-1"></i> Career
+        </button>
+        <button onclick="switchTab('about')" id="nav-about" class="nav-btn px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/60 transition-all">
+          <i class="fa-solid fa-user-graduate mr-1"></i> About Us
+        </button>
+        <button onclick="switchTab('contact')" id="nav-contact" class="nav-btn px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/60 transition-all">
+          <i class="fa-solid fa-envelope mr-1"></i> Contact
+        </button>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-gray-300 hover:text-white">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobileMenu" class="hidden lg:hidden mt-3 pt-3 border-t border-gray-800 space-y-2">
+      <button onclick="switchTab('home'); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg text-gray-200 hover:bg-gray-800 flex items-center gap-3">
+        <i class="fa-solid fa-house text-brand-cyan"></i> Home
+      </button>
+      <button onclick="switchTab('manuals'); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg text-gray-200 hover:bg-gray-800 flex items-center gap-3">
+        <i class="fa-solid fa-book-open text-brand-violet"></i> Lab Manuals
+      </button>
+      <button onclick="switchTab('bus'); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg text-gray-200 hover:bg-gray-800 flex items-center gap-3">
+        <i class="fa-solid fa-bus text-brand-amber"></i> Bus Ticket Booking
+      </button>
+      <button onclick="switchTab('career'); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg text-gray-200 hover:bg-gray-800 flex items-center gap-3">
+        <i class="fa-solid fa-chart-line text-brand-rose"></i> Career Guidance
+      </button>
+      <button onclick="switchTab('about'); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg text-gray-200 hover:bg-gray-800 flex items-center gap-3">
+        <i class="fa-solid fa-user-graduate text-brand-amber"></i> About Us
+      </button>
+      <button onclick="switchTab('contact'); toggleMobileMenu()" class="w-full text-left px-4 py-2 rounded-lg text-gray-200 hover:bg-gray-800 flex items-center gap-3">
+        <i class="fa-solid fa-envelope text-gray-400"></i> Contact
+      </button>
+    </div>
+  </header>
+
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-8">
+
+    <!-- ========================================== -->
+    <!-- SECTION 1: HOME PAGE WITH 3D CANVAS HERO   -->
+    <!-- ========================================== -->
+    <div id="tab-home" class="tab-content space-y-16">
+
+      <!-- Hero Section with Interactive 3D Canvas -->
+      <section class="grid lg:grid-cols-12 gap-8 items-center py-6 relative">
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left z-10">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-violet/10 border border-brand-violet/30 text-brand-violet text-xs font-semibold uppercase tracking-wider">
+            <i class="fa-solid fa-cube text-brand-cyan"></i> Interactive 3D Practical Experience
+          </div>
+          <h1 class="text-4xl sm:text-5xl xl:text-6xl font-black tracking-tight leading-tight">
+            Master Your Labs, <br>
+            <span class="neon-text">Book Travel Instantly</span>
+          </h1>
+          <p class="text-gray-300 text-base sm:text-lg max-w-2xl leading-relaxed mx-auto lg:mx-0">
+            Access verified academic lab manuals, fine-tune your engineering career, and book interstate or interdistrict express bus tickets—all inside an interactive visual environment.
+          </p>
+
+          <!-- CTAs -->
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <button onclick="switchTab('manuals')" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-violet to-brand-cyan hover:opacity-95 font-bold text-white shadow-lg shadow-brand-violet/25 hover:scale-105 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-book-open"></i> Explore Lab Manuals
             </button>
+            <button onclick="switchTab('bus')" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-amber to-brand-rose hover:opacity-95 font-bold text-white shadow-lg shadow-brand-amber/25 hover:scale-105 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-bus"></i> Book Bus Tickets
+            </button>
+          </div>
         </div>
 
-        <!-- Mobile Dropdown -->
-        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-white/10 px-6 py-4 space-y-4">
-            <a href="#home" class="block hover:text-brandPink transition-colors mobile-link">Home</a>
-            <a href="#about" class="block hover:text-brandCyan transition-colors mobile-link">About Us</a>
-            <a href="#process" class="block hover:text-brandGold transition-colors mobile-link">Behind the Brush</a>
-            <a href="#gallery" class="block hover:text-brandPink transition-colors mobile-link">Gallery</a>
-            <a href="#contact" class="block hover:text-brandCyan transition-colors mobile-link">Contact Us</a>
+        <!-- LIVE THREE.JS 3D CANVAS CONTAINER -->
+        <div class="lg:col-span-5 flex justify-center relative min-h-[320px]">
+          <div id="canvas3dContainer" class="w-full h-80 rounded-3xl overflow-hidden glass-card-3d border border-gray-700/80 shadow-2xl relative flex items-center justify-center">
+            <canvas id="canvas3d"></canvas>
+            <div class="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-center text-[11px] text-gray-300 bg-gray-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-gray-800 pointer-events-none">
+              <span><i class="fa-solid fa-hand-pointer text-brand-cyan mr-1"></i> Move mouse to rotate 3D viewport</span>
+              <span class="text-brand-violet font-bold">3D Render Active</span>
+            </div>
+          </div>
         </div>
-    </header>
+      </section>
 
-    <!-- Hero Section with Interactive 3D Canvas -->
-    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <!-- Three.js 3D Background Canvas -->
-        <div id="canvas-container" class="absolute inset-0 z-0 pointer-events-none"></div>
-
-        <!-- Ambient Color Blurs -->
-        <div class="absolute top-1/3 left-1/4 w-80 h-80 bg-brandPink/20 rounded-full blur-[140px] pointer-events-none"></div>
-        <div class="absolute bottom-1/3 right-1/4 w-80 h-80 bg-brandCyan/20 rounded-full blur-[140px] pointer-events-none"></div>
-
-        <div class="max-w-5xl mx-auto text-center px-4 sm:px-6 relative z-10 py-20" data-aos="zoom-in" data-aos-duration="1000">
-            <span class="text-xs uppercase tracking-[0.3em] font-extrabold text-white bg-gradient-to-r from-brandPink to-brandPurple px-5 py-2 rounded-full border border-white/20 shadow-lg inline-block mb-6">
-                100% Handcrafted Wearable Art
-            </span>
-            <h1 class="font-serif text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-tight mb-6 vibrant-gradient-text">
-                Where Art Meets Fashion
-            </h1>
-            <p class="text-lg sm:text-2xl text-gray-200 max-w-3xl mx-auto font-light leading-relaxed mb-10">
-                Handcrafted, unique art painted with passion on premium apparel—shirts, t-shirts, sarees, and pants.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
-                <a href="#gallery" class="w-full sm:w-auto px-9 py-4 rounded-full bg-gradient-to-r from-brandPink to-brandPurple text-white font-bold text-lg shadow-xl hover:shadow-brandPink/30 transition-all duration-300">
-                    Explore Our Gallery
-                </a>
-                <a href="#contact" class="w-full sm:w-auto px-9 py-4 rounded-full bg-transparent border-2 border-brandCyan text-brandCyan hover:bg-brandCyan hover:text-black font-bold text-lg transition-all duration-300">
-                    Request Custom Piece
-                </a>
-            </div>
+      <!-- Quick Search Widget -->
+      <section class="glass-card-3d rounded-2xl p-6 border border-gray-800 shadow-2xl space-y-4">
+        <div class="flex items-center gap-3 text-brand-cyan font-bold text-lg">
+          <i class="fa-solid fa-filter"></i>
+          <span>Quick Lab Manual Finder</span>
         </div>
-    </section>
-
-    <!-- About Us Section -->
-    <section id="about" class="py-28 bg-cardBg/60 border-y border-white/10 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
-                <h2 class="font-serif text-3xl sm:text-5xl font-extrabold vibrant-gradient-text mb-4">Crafted by Hand, Worn with Pride</h2>
-                <div class="w-24 h-1 bg-gradient-to-r from-brandPink via-brandGold to-brandCyan mx-auto mb-6 rounded-full"></div>
-                <p class="text-gray-300 leading-relaxed text-lg sm:text-xl">
-                    Every product is 100% manually painted by our artists. We do not use mass-printing methods. Every brushstroke carries emotion, intention, and individuality.
-                </p>
-            </div>
-
-            <!-- Features Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-cardBg p-8 rounded-3xl border border-white/10 hover:border-brandPink transition-all duration-300 shadow-xl" data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-16 h-16 bg-brandPink/15 rounded-2xl flex items-center justify-center text-brandPink text-3xl mb-6">
-                        <i class="fa-solid fa-paintbrush"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 text-white">100% Manual Fabric Arts</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Directly hand-painted onto apparel using fine artistic precision.</p>
-                </div>
-
-                <div class="bg-cardBg p-8 rounded-3xl border border-white/10 hover:border-brandPurple transition-all duration-300 shadow-xl" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-brandPurple/15 rounded-2xl flex items-center justify-center text-brandPurple text-3xl mb-6">
-                        <i class="fa-solid fa-shirt"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 text-white">Premium Quality Textiles</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Cotton, Denim, Silk, and trousers chosen for durability and comfort.</p>
-                </div>
-
-                <div class="bg-cardBg p-8 rounded-3xl border border-white/10 hover:border-brandGold transition-all duration-300 shadow-xl" data-aos="fade-up" data-aos-delay="300">
-                    <div class="w-16 h-16 bg-brandGold/15 rounded-2xl flex items-center justify-center text-brandGold text-3xl mb-6">
-                        <i class="fa-solid fa-droplet"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 text-white">Washable Fabric Paints</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Created using non-fade fabric pigments made for lasting wear and gentle wash.</p>
-                </div>
-
-                <div class="bg-cardBg p-8 rounded-3xl border border-white/10 hover:border-brandCyan transition-all duration-300 shadow-xl" data-aos="fade-up" data-aos-delay="400">
-                    <div class="w-16 h-16 bg-brandCyan/15 rounded-2xl flex items-center justify-center text-brandCyan text-3xl mb-6">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 text-white">Custom Orders</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Share your unique idea and we will transform it into custom wearable art.</p>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">Branch / Department</label>
+            <select id="quickBranch" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="ALL">All Departments</option>
+              <option value="CSE">Computer Science (CSE)</option>
+              <option value="ECE">Electronics (ECE)</option>
+              <option value="MECH">Mechanical Engg.</option>
+              <option value="CIVIL">Civil Engg.</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">Academic Year</label>
+            <select id="quickYear" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="ALL">All Years</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">Semester</label>
+            <select id="quickSem" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="ALL">All Semesters</option>
+              <option value="1">Sem 1</option>
+              <option value="2">Sem 2</option>
+              <option value="3">Sem 3</option>
+              <option value="4">Sem 4</option>
+              <option value="5">Sem 5</option>
+              <option value="6">Sem 6</option>
+              <option value="7">Sem 7</option>
+              <option value="8">Sem 8</option>
+            </select>
+          </div>
+          <div class="flex items-end">
+            <button onclick="applyQuickFilter()" class="w-full py-2 px-4 rounded-lg bg-brand-violet hover:bg-brand-violet/90 text-white font-bold text-sm shadow-md shadow-brand-violet/20 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-arrow-right"></i> Find Manuals
+            </button>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <!-- Process Video Section (Advertisement) -->
-    <section id="process" class="py-28">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6" data-aos="zoom-in" data-aos-duration="1000">
-            <div class="text-center mb-12">
-                <h2 class="font-serif text-3xl sm:text-5xl font-extrabold vibrant-gradient-text mb-4">Behind the Brush</h2>
-                <p class="text-gray-300 text-lg">Watch how our artists bring raw fabric to life with manual art.</p>
-            </div>
-
-            <!-- Responsive Video Frame with Neon Border Glow -->
-            <div class="relative aspect-video rounded-3xl overflow-hidden border-2 border-brandPink/60 glow-pink bg-cardBg">
-                <video autoplay loop muted playsinline controls class="w-full h-full object-cover">
-                    <source src="process-ad.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
+      <!-- Founder Spotlight -->
+      <section class="glass-card-3d rounded-3xl p-8 border border-gray-800 flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-gray-900/90 via-gray-900/50 to-brand-violet/10">
+        <div class="space-y-3 max-w-2xl text-center md:text-left">
+          <div class="inline-block px-3 py-1 rounded-full bg-brand-violet/20 text-brand-violet text-xs font-semibold uppercase tracking-wider">
+            Founder Spotlight
+          </div>
+          <h3 class="text-2xl font-bold text-white">Meet Shruthin Gundaji</h3>
+          <p class="text-gray-300 text-sm leading-relaxed">
+            "Learn with SG provides academic clarity in laboratories and solves campus travel logistics by allowing students to conveniently search and book interdistrict bus tickets for seamless weekend travel."
+          </p>
         </div>
-    </section>
+        <button onclick="switchTab('about')" class="px-6 py-3 rounded-xl bg-brand-violet hover:bg-brand-violet/90 text-white font-bold text-sm whitespace-nowrap shadow-lg shadow-brand-violet/25">
+          Read Founder's Vision <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+      </section>
 
-    <!-- Interactive 3D Product Gallery Section -->
-    <section id="gallery" class="py-28 bg-cardBg/60 border-t border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12" data-aos="fade-up">
-                <h2 class="font-serif text-3xl sm:text-5xl font-extrabold vibrant-gradient-text mb-4">Interactive Art Gallery</h2>
-                <p class="text-gray-300 text-lg">Hover over any product image card to view it in 3D perspective.</p>
-            </div>
+    </div>
 
-            <!-- Filter Buttons -->
-            <div class="flex flex-wrap justify-center gap-3 mb-16" data-aos="fade-up">
-                <button onclick="filterGallery('all')" class="filter-btn active px-7 py-2.5 rounded-full border-2 border-brandPink bg-brandPink text-white font-bold text-sm transition-all duration-300">All</button>
-                <button onclick="filterGallery('t-shirts')" class="filter-btn px-7 py-2.5 rounded-full border-2 border-white/20 hover:border-brandCyan text-gray-300 hover:text-brandCyan font-bold text-sm transition-all duration-300">T-Shirts</button>
-                <button onclick="filterGallery('shirts')" class="filter-btn px-7 py-2.5 rounded-full border-2 border-white/20 hover:border-brandGold text-gray-300 hover:text-brandGold font-bold text-sm transition-all duration-300">Shirts</button>
-                <button onclick="filterGallery('others')" class="filter-btn px-7 py-2.5 rounded-full border-2 border-white/20 hover:border-brandPurple text-gray-300 hover:text-brandPurple font-bold text-sm transition-all duration-300">Sarees & Pants</button>
-            </div>
 
-            <!-- 3D Card Grid using Local Upload Images -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                
-                <!-- Card 1 -->
-                <div class="gallery-item shirts perspective-card" data-aos="fade-up">
-                    <div class="card-3d-inner bg-cardBg rounded-3xl overflow-hidden border border-white/10 relative group">
-                        <div class="relative overflow-hidden aspect-[4/5]">
-                            <img src="images/shiva-shirt.jpg" alt="Hand-Painted Shiva Denim Shirt" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                <span class="text-brandGold font-bold text-xs uppercase tracking-wider mb-1">100% Hand-Painted</span>
-                                <h3 class="text-2xl font-extrabold text-white mb-1">Shiva Denim Shirt</h3>
-                                <p class="text-gray-300 text-sm">Manual Art on Premium Denim</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="gallery-item t-shirts perspective-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card-3d-inner bg-cardBg rounded-3xl overflow-hidden border border-white/10 relative group">
-                        <div class="relative overflow-hidden aspect-[4/5]">
-                            <img src="images/1111-tee.jpg" alt="11:11 Celestial Tee" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                <span class="text-brandGold font-bold text-xs uppercase tracking-wider mb-1">100% Hand-Painted</span>
-                                <h3 class="text-2xl font-extrabold text-white mb-1">11:11 Celestial Tee</h3>
-                                <p class="text-gray-300 text-sm">Sunburst Cosmic Art</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="gallery-item t-shirts perspective-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card-3d-inner bg-cardBg rounded-3xl overflow-hidden border border-white/10 relative group">
-                        <div class="relative overflow-hidden aspect-[4/5]">
-                            <img src="images/duck-tee.jpg" alt="Cute Duck Baddie Tee" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                <span class="text-brandGold font-bold text-xs uppercase tracking-wider mb-1">100% Hand-Painted</span>
-                                <h3 class="text-2xl font-extrabold text-white mb-1">"I'm a Baddie" Duck Tee</h3>
-                                <p class="text-gray-300 text-sm">Character Painting</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="gallery-item t-shirts perspective-card" data-aos="fade-up">
-                    <div class="card-3d-inner bg-cardBg rounded-3xl overflow-hidden border border-white/10 relative group">
-                        <div class="relative overflow-hidden aspect-[4/5]">
-                            <img src="images/butterfly-tee.jpg" alt="Butterfly Tee" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                <span class="text-brandGold font-bold text-xs uppercase tracking-wider mb-1">100% Hand-Painted</span>
-                                <h3 class="text-2xl font-extrabold text-white mb-1">Pink Butterfly Tee</h3>
-                                <p class="text-gray-300 text-sm">Vivid Crimson Butterfly</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="gallery-item t-shirts perspective-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card-3d-inner bg-cardBg rounded-3xl overflow-hidden border border-white/10 relative group">
-                        <div class="relative overflow-hidden aspect-[4/5]">
-                            <img src="images/seven-tee.jpg" alt="SEVEN Typography Tee" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                <span class="text-brandGold font-bold text-xs uppercase tracking-wider mb-1">100% Hand-Painted</span>
-                                <h3 class="text-2xl font-extrabold text-white mb-1">"SEVEN" Graphic Tee</h3>
-                                <p class="text-gray-300 text-sm">Olive Lettering</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="gallery-item shirts perspective-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card-3d-inner bg-cardBg rounded-3xl overflow-hidden border border-white/10 relative group">
-                        <div class="relative overflow-hidden aspect-[4/5]">
-                            <img src="images/koi-shirt.jpg" alt="Koi Fish Shirt" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                <span class="text-brandGold font-bold text-xs uppercase tracking-wider mb-1">100% Hand-Painted</span>
-                                <h3 class="text-2xl font-extrabold text-white mb-1">Yin-Yang Koi Fish Shirt</h3>
-                                <p class="text-gray-300 text-sm">Dual Balance Color Artwork</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 7 -->
-                <div class="gallery-item t-shirts perspective-card" data-aos="fade-up">
-                    <div class="card-3d-inner bg-cardBg rounded-3xl overflow-hidden border border-white/10 relative group">
-                        <div class="relative overflow-hidden aspect-[4/5]">
-                            <img src="images/18-tee.jpg" alt="Number 18 Bow Tee" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                <span class="text-brandGold font-bold text-xs uppercase tracking-wider mb-1">100% Hand-Painted</span>
-                                <h3 class="text-2xl font-extrabold text-white mb-1">Number '18' Custom Tee</h3>
-                                <p class="text-gray-300 text-sm">Manual Art with Bow Accent</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+    <!-- ========================================== -->
+    <!-- SECTION 2: LAB MANUALS REPOSITORY TAB      -->
+    <!-- ========================================== -->
+    <div id="tab-manuals" class="tab-content hidden space-y-8">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-extrabold text-white">Lab Manuals Repository</h1>
+          <p class="text-gray-400 text-sm">Filter manuals by branch, academic year, semester, or search by subject name.</p>
         </div>
-    </section>
+        <button onclick="resetFilters()" class="self-start md:self-auto text-xs px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300">
+          <i class="fa-solid fa-rotate-right mr-1"></i> Reset Filters
+        </button>
+      </div>
 
-    <!-- Contact & Social Section -->
-    <section id="contact" class="py-28">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                
-                <div data-aos="fade-right">
-                    <h2 class="font-serif text-4xl sm:text-5xl font-extrabold vibrant-gradient-text mb-6">Request Your Custom Piece</h2>
-                    <p class="text-gray-300 mb-8 leading-relaxed text-lg">
-                        Have a design idea for a shirt, saree, t-shirt, or pants? Connect with us directly on Instagram or via email to order a customized piece.
-                    </p>
-
-                    <div class="space-y-6">
-                        <a href="https://www.instagram.com/just_j.officials/" target="_blank" class="flex items-center space-x-5 p-5 rounded-3xl bg-cardBg border border-white/10 hover:border-brandPink transition-all duration-300 group shadow-lg">
-                            <div class="w-14 h-14 rounded-2xl bg-brandPink/15 flex items-center justify-center text-brandPink text-2xl group-hover:bg-brandPink group-hover:text-white transition-colors">
-                                <i class="fa-brands fa-instagram"></i>
-                            </div>
-                            <div>
-                                <div class="text-xs text-gray-400 uppercase font-bold tracking-wider">Instagram Handle</div>
-                                <div class="text-white font-bold text-lg">just_j.officials</div>
-                            </div>
-                        </a>
-
-                        <a href="mailto:justj@gmail.com" class="flex items-center space-x-5 p-5 rounded-3xl bg-cardBg border border-white/10 hover:border-brandCyan transition-all duration-300 group shadow-lg">
-                            <div class="w-14 h-14 rounded-2xl bg-brandCyan/15 flex items-center justify-center text-brandCyan text-2xl group-hover:bg-brandCyan group-hover:text-black transition-colors">
-                                <i class="fa-regular fa-envelope"></i>
-                            </div>
-                            <div>
-                                <div class="text-xs text-gray-400 uppercase font-bold tracking-wider">Email Address</div>
-                                <div class="text-white font-bold text-lg">justj@gmail.com</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Inquiry Form with Formspree Endpoint -->
-                <div class="bg-cardBg p-8 sm:p-10 rounded-3xl border border-white/10 shadow-2xl" data-aos="fade-left">
-                    <form action="https://formspree.io/f/mzeppepo" method="POST" class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-200 mb-2">Your Name</label>
-                            <input type="text" name="name" required placeholder="Enter your full name" class="w-full bg-black/60 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brandPink transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-200 mb-2">Email Address</label>
-                            <input type="email" name="email" required placeholder="name@example.com" class="w-full bg-black/60 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brandPink transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-200 mb-2">Apparel Type</label>
-                            <select name="apparel_type" class="w-full bg-black/60 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brandPink transition-colors">
-                                <option value="Custom T-Shirt">Custom T-Shirt</option>
-                                <option value="Custom Shirt">Custom Shirt</option>
-                                <option value="Custom Saree Painting">Custom Saree Painting</option>
-                                <option value="Custom Pants Artwork">Custom Pants Artwork</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-200 mb-2">Artwork Details / Concept</label>
-                            <textarea name="message" rows="4" required placeholder="Describe what artwork you want hand-painted..." class="w-full bg-black/60 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brandPink transition-colors"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-gradient-to-r from-brandPink via-brandPurple to-brandCyan text-white font-bold py-4 rounded-2xl hover:brightness-110 transition-all duration-300 shadow-xl">
-                            Send Custom Request
-                        </button>
-                    </form>
-                </div>
-
+      <!-- Filters -->
+      <div class="glass-card-3d rounded-2xl p-5 border border-gray-800 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">Search Keywords</label>
+            <div class="relative">
+              <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+              <input type="text" id="filterSearch" oninput="renderManuals()" placeholder="e.g., Python, DS, EE101..." class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-8 pr-3 py-2 text-sm text-gray-200">
             </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">Department</label>
+            <select id="filterBranch" onchange="renderManuals()" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="ALL">All Departments</option>
+              <option value="CSE">Computer Science (CSE)</option>
+              <option value="ECE">Electronics (ECE)</option>
+              <option value="MECH">Mechanical Engg.</option>
+              <option value="CIVIL">Civil Engg.</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">Academic Year</label>
+            <select id="filterYear" onchange="renderManuals()" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="ALL">All Years</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">Semester</label>
+            <select id="filterSem" onchange="renderManuals()" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="ALL">All Semesters</option>
+              <option value="1">Sem 1</option>
+              <option value="2">Sem 2</option>
+              <option value="3">Sem 3</option>
+              <option value="4">Sem 4</option>
+              <option value="5">Sem 5</option>
+              <option value="6">Sem 6</option>
+              <option value="7">Sem 7</option>
+              <option value="8">Sem 8</option>
+            </select>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- Footer -->
-    <footer class="py-8 bg-black border-t border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p class="text-sm text-gray-400">
-                © 2026 Just J Officials. Where Art Meets Fashion.
-            </p>
-            <div class="flex space-x-6">
-                <a href="https://www.instagram.com/just_j.officials/" target="_blank" class="text-gray-400 hover:text-brandPink transition-colors">
-                    <i class="fa-brands fa-instagram text-2xl"></i>
-                </a>
-                <a href="mailto:justj@gmail.com" class="text-gray-400 hover:text-brandCyan transition-colors">
-                    <i class="fa-regular fa-envelope text-2xl"></i>
-                </a>
+      <!-- Manuals Grid -->
+      <div id="manualsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <div id="noResults" class="hidden text-center py-12 space-y-3">
+        <i class="fa-solid fa-folder-open text-4xl text-gray-600"></i>
+        <h3 class="text-xl font-bold text-gray-300">No Manuals Found</h3>
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SECTION 3: ONLINE BUS TICKET BOOKING TAB   -->
+    <!-- ========================================== -->
+    <div id="tab-bus" class="tab-content hidden space-y-8">
+      <div class="space-y-2 text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan text-xs font-semibold uppercase tracking-wider">
+          <i class="fa-solid fa-bus"></i> Interstate & Interdistrict Express
+        </div>
+        <h1 class="text-3xl font-extrabold text-white">Online Bus Ticket Booking</h1>
+        <p class="text-gray-400 text-sm">Book bus tickets across state borders and intra-state districts with instant e-Ticket downloads.</p>
+      </div>
+
+      <!-- BUS SEARCH & FILTER WIDGET -->
+      <div class="glass-card-3d rounded-2xl p-6 border border-gray-800 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1"><i class="fa-solid fa-location-dot text-brand-cyan mr-1"></i> From (State / District)</label>
+            <select id="busFromState" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="Telangana">Telangana (Hyderabad, Warangal, Nizamabad)</option>
+              <option value="Andhra Pradesh">Andhra Pradesh (Visakhapatnam, Vijayawada, Tirupati)</option>
+              <option value="Karnataka">Karnataka (Bengaluru, Mysuru, Hubballi)</option>
+              <option value="Maharashtra">Maharashtra (Mumbai, Pune, Nagpur)</option>
+              <option value="Tamil Nadu">Tamil Nadu (Chennai, Coimbatore, Madurai)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1"><i class="fa-solid fa-location-crosshairs text-brand-rose mr-1"></i> To (State / District)</label>
+            <select id="busToState" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="Andhra Pradesh">Andhra Pradesh (Vijayawada / Vizag)</option>
+              <option value="Telangana">Telangana (Hyderabad / Warangal)</option>
+              <option value="Karnataka">Karnataka (Bengaluru / Mysuru)</option>
+              <option value="Maharashtra">Maharashtra (Pune / Mumbai)</option>
+              <option value="Tamil Nadu">Tamil Nadu (Chennai)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1"><i class="fa-solid fa-calendar-days text-brand-amber mr-1"></i> Journey Date</label>
+            <input type="date" id="busDate" value="2026-08-10" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1"><i class="fa-solid fa-couch text-brand-violet mr-1"></i> Bus Category</label>
+            <select id="busType" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200">
+              <option value="ALL">All Categories</option>
+              <option value="AC Sleeper">AC Sleeper (2+1)</option>
+              <option value="Volvo Super Deluxe">Volvo Super Deluxe</option>
+              <option value="Express Non-AC">Express Non-AC (2+2)</option>
+            </select>
+          </div>
+          <div class="flex items-end">
+            <button onclick="searchBuses()" class="w-full py-2.5 px-4 rounded-lg bg-gradient-to-r from-brand-cyan to-brand-violet font-bold text-white text-sm shadow-md shadow-brand-cyan/20 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-magnifying-glass"></i> Search Buses
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AVAILABLE BUSES RESULTS LIST -->
+      <div class="space-y-4">
+        <div class="flex justify-between items-center px-1">
+          <h3 class="text-lg font-bold text-white">Available Buses (<span id="busCount">3</span>)</h3>
+          <span class="text-xs text-brand-amber font-semibold"><i class="fa-solid fa-id-card mr-1"></i> Toggle Student ID discount during seat booking!</span>
+        </div>
+
+        <div id="busesList" class="space-y-4"></div>
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SECTION 4: CAREER GUIDANCE TAB             -->
+    <!-- ========================================== -->
+    <div id="tab-career" class="tab-content hidden space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="px-3 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan text-xs font-semibold uppercase tracking-wider">Skill Fine-Tuning</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white">Lab Knowledge to Career Success</h1>
+        <p class="text-gray-400 text-sm">Discover how each experiment equips you for high-paying technical engineering roles.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card-3d rounded-2xl p-6 border border-gray-800 space-y-4">
+          <i class="fa-solid fa-code-compare text-3xl text-brand-violet"></i>
+          <h3 class="text-xl font-bold text-white">Software Development</h3>
+          <p class="text-xs text-gray-400">Data Structures, Algorithms & Web Labs mapped to Full-Stack engineering.</p>
+        </div>
+        <div class="glass-card-3d rounded-2xl p-6 border border-gray-800 space-y-4">
+          <i class="fa-solid fa-microchip text-3xl text-brand-cyan"></i>
+          <h3 class="text-xl font-bold text-white">Embedded Systems</h3>
+          <p class="text-xs text-gray-400">Microcontroller & Circuit Simulation labs mapped to Firmware Engineering.</p>
+        </div>
+        <div class="glass-card-3d rounded-2xl p-6 border border-gray-800 space-y-4">
+          <i class="fa-solid fa-chart-pie text-3xl text-brand-amber"></i>
+          <h3 class="text-xl font-bold text-white">Data Analysis & AI</h3>
+          <p class="text-xs text-gray-400">Python, Machine Learning, and Matlab numerical labs for Data Science.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SECTION 5: ABOUT US TAB                    -->
+    <!-- ========================================== -->
+    <div id="tab-about" class="tab-content hidden space-y-12">
+      <div class="glass-card-3d rounded-3xl p-8 border border-gray-800 grid md:grid-cols-12 gap-8 items-center">
+        <div class="md:col-span-4 flex justify-center">
+          <div class="w-48 h-48 rounded-3xl bg-gradient-to-tr from-brand-violet via-brand-cyan to-brand-amber p-1">
+            <div class="w-full h-full bg-gray-900 rounded-[22px] flex flex-col items-center justify-center text-center p-6 space-y-3">
+              <div class="w-16 h-16 rounded-full bg-brand-violet/20 border border-brand-violet flex items-center justify-center text-2xl text-brand-violet font-bold">SG</div>
+              <div>
+                <h3 class="text-base font-bold text-white">Shruthin Gundaji</h3>
+                <p class="text-xs text-brand-cyan">Founder & Owner</p>
+              </div>
             </div>
+          </div>
         </div>
-    </footer>
+        <div class="md:col-span-8 space-y-4">
+          <span class="px-3 py-1 rounded-full bg-brand-violet/20 text-brand-violet text-xs font-semibold uppercase tracking-wider">About Founder</span>
+          <h2 class="text-3xl font-extrabold text-white">Empowering Academic & Campus Solutions</h2>
+          <p class="text-gray-300 text-sm leading-relaxed">
+            Founded by <strong class="text-brand-violet">Shruthin Gundaji</strong>, Learn with SG streamlines academic practicals and offers interstate/interdistrict bus ticket booking, allowing students to focus on career development and hassle-free travel.
+          </p>
+        </div>
+      </div>
+    </div>
 
-    <!-- Three.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- AOS Animation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
-    <script>
-        // Init Scroll Animations
-        AOS.init({
-            once: true,
-            duration: 800,
+    <!-- ========================================== -->
+    <!-- SECTION 6: CONTACT TAB WITH FORMSPREE       -->
+    <!-- ========================================== -->
+    <div id="tab-contact" class="tab-content hidden space-y-8 max-w-2xl mx-auto">
+      <div class="text-center space-y-2">
+        <h1 class="text-3xl font-extrabold text-white">Get in Touch</h1>
+        <p class="text-gray-400 text-sm">Have feedback, lab requests, or bus booking support inquiries?</p>
+      </div>
+
+      <form id="contactForm" onsubmit="handleFormspreeSubmit(event)" class="glass-card-3d rounded-2xl p-6 sm:p-8 border border-gray-800 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Full Name</label>
+          <input type="text" name="name" required placeholder="Alex Johnson" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-gray-200">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Email</label>
+          <input type="email" name="email" required placeholder="alex@student.edu" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-gray-200">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Branch / Academic Year</label>
+          <input type="text" name="branch_year" placeholder="e.g. CSE 3rd Year" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-gray-200">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Message</label>
+          <textarea name="message" rows="4" required placeholder="Your inquiry or manual request..." class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-gray-200"></textarea>
+        </div>
+        <button type="submit" id="submitBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-violet to-brand-cyan font-bold text-white text-sm shadow-lg shadow-brand-violet/25 hover:opacity-95 transition-all flex items-center justify-center gap-2">
+          <span>Send Message</span>
+        </button>
+      </form>
+    </div>
+
+  </main>
+
+
+  <!-- SEAT SELECTION & BUS BOOKING MODAL -->
+  <div id="busModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-3d w-full max-w-3xl rounded-2xl border border-gray-700 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-gray-900/80">
+        <div>
+          <span id="modalBusOperator" class="text-xs font-bold text-brand-amber">TSRTC Garuda Plus</span>
+          <h3 id="modalBusRoute" class="text-lg font-bold text-white">Hyderabad (Telangana) → Vijayawada (Andhra)</h3>
+        </div>
+        <button onclick="closeBusModal()" class="text-gray-400 hover:text-white p-2">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6">
+        <div class="grid md:grid-cols-12 gap-6 items-center">
+          <div class="md:col-span-7 bg-gray-900/90 rounded-2xl p-5 border border-gray-800 space-y-4">
+            <div class="flex justify-between items-center text-xs text-gray-400 border-b border-gray-800 pb-2">
+              <span>Front / Driver Deck <i class="fa-solid fa-steering-wheel ml-1"></i></span>
+              <span class="text-brand-cyan">Sleeper / Seater Berths</span>
+            </div>
+
+            <div class="space-y-3 pt-2">
+              <div class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Lower Deck</div>
+              <div class="flex flex-wrap gap-2.5">
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'L1', 650)">L1</div>
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'L2', 650)">L2</div>
+                <div class="seat-box seat-booked">L3</div>
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'L4', 650)">L4</div>
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'L5', 650)">L5</div>
+                <div class="seat-box seat-booked">L6</div>
+              </div>
+
+              <div class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider pt-2">Upper Deck</div>
+              <div class="flex flex-wrap gap-2.5">
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'U1', 750)">U1</div>
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'U2', 750)">U2</div>
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'U3', 750)">U3</div>
+                <div class="seat-box seat-booked">U4</div>
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'U5', 750)">U5</div>
+                <div class="seat-box seat-available" onclick="toggleSeat(this, 'U6', 750)">U6</div>
+              </div>
+            </div>
+
+            <div class="flex gap-4 text-[11px] text-gray-400 pt-3 border-t border-gray-800">
+              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-gray-800 border border-gray-500"></div> Available</div>
+              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-brand-violet"></div> Selected</div>
+              <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-red-500/30 border border-red-500"></div> Booked</div>
+            </div>
+          </div>
+
+          <div class="md:col-span-5 space-y-4">
+            <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 space-y-3">
+              <h4 class="font-bold text-white text-sm border-b border-gray-800 pb-2">Booking Summary</h4>
+              <div class="text-xs space-y-1.5 text-gray-300">
+                <div class="flex justify-between"><span>Selected Seats:</span> <strong id="selectedSeatsLabel" class="text-brand-cyan">None</strong></div>
+                <div class="flex justify-between"><span>Base Fare:</span> <strong id="baseFareLabel">₹0</strong></div>
+                <div class="flex justify-between text-emerald-400"><span>Student Discount (15%):</span> <strong id="discountLabel">-₹0</strong></div>
+                <div class="flex justify-between text-white font-bold text-sm border-t border-gray-800 pt-2">
+                  <span>Total Payable:</span> <span id="totalPayableLabel" class="text-brand-amber">₹0</span>
+                </div>
+              </div>
+            </div>
+
+            <label class="flex items-start gap-2.5 p-3 rounded-xl bg-brand-violet/10 border border-brand-violet/30 cursor-pointer">
+              <input type="checkbox" id="studentDiscountCheck" onchange="calculateFare()" class="mt-0.5 rounded text-brand-violet">
+              <span class="text-xs text-gray-200">
+                Apply <strong>15% SG Student Discount</strong> (Requires College ID Card at boarding)
+              </span>
+            </label>
+
+            <div class="space-y-2">
+              <input type="text" id="passengerName" placeholder="Primary Passenger Name" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-200">
+              <input type="tel" id="passengerPhone" placeholder="Mobile Number for e-Ticket SMS" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-200">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-gray-800 bg-gray-900/80 flex justify-end gap-3">
+        <button onclick="closeBusModal()" class="px-4 py-2 rounded-lg bg-gray-800 text-xs font-bold text-gray-300">Cancel</button>
+        <button onclick="confirmBusBooking()" class="px-5 py-2 rounded-lg bg-brand-cyan hover:bg-brand-cyan/90 text-xs font-bold text-gray-950 flex items-center gap-2 shadow-lg shadow-brand-cyan/20">
+          <i class="fa-solid fa-ticket"></i> Pay & Confirm Booking
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- LAB PREVIEW MODAL -->
+  <div id="previewModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-3d w-full max-w-2xl rounded-2xl border border-gray-700 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-gray-900/60">
+        <div>
+          <span id="modalCode" class="text-xs font-mono text-brand-cyan">CS302</span>
+          <h3 id="modalTitle" class="text-xl font-bold text-white">Data Structures Lab</h3>
+        </div>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white p-2">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 overflow-y-auto text-sm text-gray-300">
+        <p id="modalDesc" class="text-xs text-gray-400">Detailed lab guide with verified code and outputs.</p>
+      </div>
+      <div class="p-4 border-t border-gray-800 bg-gray-900/60 flex justify-end gap-3">
+        <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-gray-800 text-xs font-bold text-gray-300">Close</button>
+        <button onclick="alert('Downloading Manual...')" class="px-5 py-2 rounded-lg bg-brand-violet text-xs font-bold text-white">Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- GLOBAL FOOTER -->
+  <footer class="border-t border-gray-800 bg-gray-950/80 mt-16 py-8 px-4 lg:px-8 text-xs text-gray-400">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-extrabold neon-text">Learn with SG</span>
+        <span>• Founded by <strong class="text-gray-300">Shruthin Gundaji</strong></span>
+      </div>
+      <p class="text-gray-500">Fine-tuning practical skills & campus travel.</p>
+    </div>
+  </footer>
+
+
+  <!-- JAVASCRIPT & THREE.JS LOGIC -->
+  <script>
+    // 1. THREE.JS 3D CANVAS SCENE SETUP
+    function init3DScene() {
+      const container = document.getElementById('canvas3dContainer');
+      const canvas = document.getElementById('canvas3d');
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.z = 5;
+
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      // Add Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const pointLight1 = new THREE.PointLight(0x8B5CF6, 2, 50); // Violet Light
+      pointLight1.position.set(5, 5, 5);
+      scene.add(pointLight1);
+
+      const pointLight2 = new THREE.PointLight(0x06B6D4, 2, 50); // Cyan Light
+      pointLight2.position.set(-5, -5, 2);
+      scene.add(pointLight2);
+
+      // 3D Objects: Floating Torus Knot & Orbiting Spheres
+      const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x8B5CF6,
+        roughness: 0.2,
+        metalness: 0.8,
+        wireframe: false
+      });
+      const torusKnot = new THREE.Mesh(geometry, material);
+      scene.add(torusKnot);
+
+      // Star Particles Background
+      const particlesGeo = new THREE.BufferGeometry();
+      const count = 300;
+      const positions = new Float32Array(count * 3);
+
+      for (let i = 0; i < count * 3; i++) {
+        positions[i] = (Math.random() - 0.5) * 15;
+      }
+      particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      const particlesMat = new THREE.PointsMaterial({
+        size: 0.04,
+        color: 0x06B6D4
+      });
+      const starField = new THREE.Points(particlesGeo, particlesMat);
+      scene.add(starField);
+
+      // Mouse Move Interaction
+      let mouseX = 0;
+      let mouseY = 0;
+
+      container.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        mouseX = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+        mouseY = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+      });
+
+      // Animation Loop
+      function animate() {
+        requestAnimationFrame(animate);
+
+        torusKnot.rotation.x += 0.008;
+        torusKnot.rotation.y += 0.01;
+
+        // Smooth Mouse Follow
+        torusKnot.rotation.y += mouseX * 0.05;
+        torusKnot.rotation.x += mouseY * 0.05;
+
+        starField.rotation.y -= 0.001;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Handle Resize
+      window.addEventListener('resize', () => {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+    }
+
+    // 2. 3D CARD TILT ON HOVER LOGIC
+    function init3DTiltEffect() {
+      const cards = document.querySelectorAll('.glass-card-3d');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+
+          const tiltX = (y / (rect.height / 2)) * -10;
+          const tiltY = (x / (rect.width / 2)) * 10;
+
+          card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(10px)`;
         });
 
-        // Mobile Menu Toggle
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
+        });
+      });
+    }
 
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+    // 3. LAB MANUALS DATA
+    const manualsData = [
+      { id: 1, code: "CS302", title: "Data Structures & Algorithms Lab", branch: "CSE", year: "2", sem: "3", downloads: "2.4k", desc: "Complete manual with C++ & Java code for Stacks, Queues, Trees, & Graphs." },
+      { id: 2, code: "CS501", title: "Database Management Systems Lab", branch: "CSE", year: "3", sem: "5", downloads: "1.8k", desc: "SQL queries, ER diagrams, PL/SQL procedures with outputs." },
+      { id: 3, code: "EC201", title: "Digital Electronics Circuit Lab", branch: "ECE", year: "2", sem: "3", downloads: "3.1k", desc: "Logic gates, Multiplexers, Flip-Flops, and Counter design schematics." },
+      { id: 4, code: "EC602", title: "Microcontrollers & Embedded Systems", branch: "ECE", year: "3", sem: "6", downloads: "1.2k", desc: "8051 Assembly & C programming with simulation files." },
+      { id: 5, code: "ME403", title: "Fluid Mechanics & Machinery Lab", branch: "MECH", year: "2", sem: "4", downloads: "950", desc: "Venturimeter calibration, Bernoulli theorem proof, and turbine graphs." },
+      { id: 6, code: "CE305", title: "Surveying & Geomatics Lab", branch: "CIVIL", year: "2", sem: "3", downloads: "800", desc: "Total Station leveling, compass surveying, and mapping procedures." }
+    ];
+
+    // 4. BUS DATA
+    const sampleBuses = [
+      { id: "B101", operator: "TSRTC Garuda Plus (Telangana State)", from: "Telangana (Hyderabad / Warangal)", to: "Andhra Pradesh (Vijayawada / Vizag)", type: "AC Sleeper", deptTime: "21:30", duration: "7.5 hrs", price: 650, rating: "4.8", seatsLeft: 14 },
+      { id: "B102", operator: "APSRTC Amaravati Express", from: "Andhra Pradesh (Visakhapatnam)", to: "Telangana (Hyderabad)", type: "Volvo Super Deluxe", deptTime: "22:00", duration: "8.5 hrs", price: 720, rating: "4.7", seatsLeft: 8 },
+      { id: "B103", operator: "KSRTC Airavat Club Class", from: "Karnataka (Bengaluru / Mysuru)", to: "Telangana (Hyderabad / Nizamabad)", type: "AC Sleeper", deptTime: "20:00", duration: "10 hrs", price: 890, rating: "4.9", seatsLeft: 19 }
+    ];
+
+    let selectedSeats = [];
+
+    // TAB NAVIGATION LOGIC
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-brand-violet', 'bg-brand-violet/10', 'font-semibold');
+        btn.classList.add('text-gray-300');
+      });
+
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('text-brand-violet', 'bg-brand-violet/10', 'font-semibold');
+        activeBtn.classList.remove('text-gray-300');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      init3DTiltEffect();
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    }
+
+    // FORMSPREE SUBMISSION
+    async function handleFormspreeSubmit(event) {
+      event.preventDefault();
+      const form = event.target;
+      const btn = document.getElementById('submitBtn');
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Sending...`;
+
+      try {
+        const response = await fetch("https://formspree.io/f/mzeppepo", {
+          method: "POST",
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
         });
 
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // Gallery Filter Logic
-        function filterGallery(category) {
-            const items = document.querySelectorAll('.gallery-item');
-            const buttons = document.querySelectorAll('.filter-btn');
-
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-brandPink', 'text-white', 'border-brandPink');
-                btn.classList.add('border-white/20', 'text-gray-300');
-            });
-            event.target.classList.add('bg-brandPink', 'text-white', 'border-brandPink');
-            event.target.classList.remove('border-white/20', 'text-gray-300');
-
-            items.forEach(item => {
-                if (category === 'all' || item.classList.contains(category)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+        if (response.ok) {
+          alert("Thank you! Your message has been sent successfully to Shruthin Gundaji.");
+          form.reset();
+        } else {
+          alert("Oops! There was an issue submitting your message.");
         }
+      } catch (error) {
+        alert("Network error. Please try again.");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Send Message</span>`;
+      }
+    }
 
-        // 3D Card Hover Interaction
-        const cards = document.querySelectorAll('.perspective-card');
-        cards.forEach(card => {
-            const inner = card.querySelector('.card-3d-inner');
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -14;
-                const rotateY = ((x - centerX) / centerX) * 14;
+    // RENDER MANUALS
+    function renderManuals() {
+      const grid = document.getElementById('manualsGrid');
+      const noResults = document.getElementById('noResults');
 
-                inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
-            });
+      const branchVal = document.getElementById('filterBranch').value;
+      const yearVal = document.getElementById('filterYear').value;
+      const semVal = document.getElementById('filterSem').value;
+      const searchVal = document.getElementById('filterSearch').value.toLowerCase().trim();
 
-            card.addEventListener('mouseleave', () => {
-                inner.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-            });
-        });
+      const filtered = manualsData.filter(item => {
+        const matchesBranch = (branchVal === 'ALL' || item.branch === branchVal);
+        const matchesYear = (yearVal === 'ALL' || item.year === yearVal);
+        const matchesSem = (semVal === 'ALL' || item.sem === semVal);
+        const matchesSearch = item.title.toLowerCase().includes(searchVal) || item.code.toLowerCase().includes(searchVal);
+        return matchesBranch && matchesYear && matchesSem && matchesSearch;
+      });
 
-        // Three.js 3D Floating Particle Background
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.remove('hidden');
+        return;
+      }
 
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        container.appendChild(renderer.domElement);
+      noResults.classList.add('hidden');
+      grid.innerHTML = filtered.map(item => `
+        <div class="glass-card-3d rounded-2xl p-6 border border-gray-800 space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-brand-cyan font-bold bg-brand-cyan/10 px-2.5 py-1 rounded-md border border-brand-cyan/20">${item.code}</span>
+              <span class="text-xs text-gray-400"><i class="fa-solid fa-download mr-1"></i> ${item.downloads}</span>
+            </div>
+            <h3 class="text-lg font-bold text-white">${item.title}</h3>
+            <p class="text-xs text-gray-400">${item.desc}</p>
+          </div>
+          <div class="space-y-4 pt-3 border-t border-gray-800">
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="openModal(${item.id})" class="py-2 px-3 rounded-lg bg-gray-800 text-xs font-bold text-gray-200">Preview</button>
+              <button onclick="alert('Downloading Manual PDF...')" class="py-2 px-3 rounded-lg bg-brand-violet text-xs font-bold text-white">Download</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
 
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 250;
-        const posArray = new Float32Array(particlesCount * 3);
+      init3DTiltEffect();
+    }
 
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 14;
-        }
+    function applyQuickFilter() {
+      document.getElementById('filterBranch').value = document.getElementById('quickBranch').value;
+      document.getElementById('filterYear').value = document.getElementById('quickYear').value;
+      document.getElementById('filterSem').value = document.getElementById('quickSem').value;
+      switchTab('manuals');
+      renderManuals();
+    }
 
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    function resetFilters() {
+      document.getElementById('filterBranch').value = 'ALL';
+      document.getElementById('filterYear').value = 'ALL';
+      document.getElementById('filterSem').value = 'ALL';
+      document.getElementById('filterSearch').value = '';
+      renderManuals();
+    }
 
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.03,
-            color: 0xFF2A7A,
-            transparent: true,
-            opacity: 0.8
-        });
+    // BUS SEARCH
+    function searchBuses() {
+      const container = document.getElementById('busesList');
+      container.innerHTML = sampleBuses.map(b => `
+        <div class="glass-card-3d rounded-2xl p-5 border border-gray-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-brand-cyan/40">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-[11px] font-bold">${b.type}</span>
+              <span class="text-xs text-emerald-400 font-semibold"><i class="fa-solid fa-star text-amber-400"></i> ${b.rating}</span>
+            </div>
+            <h4 class="text-base font-bold text-white">${b.operator}</h4>
+            <div class="text-xs text-gray-400 flex items-center gap-3">
+              <span>Dept: <strong class="text-white">${b.deptTime}</strong></span> • <span>${b.duration}</span>
+            </div>
+          </div>
+          <button onclick="openBusModal('${b.operator}', '${b.from} → ${b.to}')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-violet font-bold text-white text-xs">
+            Select Seats
+          </button>
+        </div>
+      `).join('');
+      init3DTiltEffect();
+    }
 
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
+    function openBusModal(operator, route) {
+      document.getElementById('modalBusOperator').innerText = operator;
+      document.getElementById('modalBusRoute').innerText = route;
+      selectedSeats = [];
+      calculateFare();
+      document.getElementById('busModal').classList.remove('hidden');
+    }
 
-        camera.position.z = 3;
+    function closeBusModal() {
+      document.getElementById('busModal').classList.add('hidden');
+    }
 
-        function animateParticles() {
-            requestAnimationFrame(animateParticles);
-            particlesMesh.rotation.y += 0.0015;
-            particlesMesh.rotation.x += 0.0008;
-            renderer.render(scene, camera);
-        }
-        animateParticles();
+    function toggleSeat(el, seatCode, fare) {
+      if (el.classList.contains('seat-booked')) return;
+      if (el.classList.contains('seat-selected')) {
+        el.classList.remove('seat-selected');
+        selectedSeats = selectedSeats.filter(s => s.code !== seatCode);
+      } else {
+        el.classList.add('seat-selected');
+        selectedSeats.push({ code: seatCode, price: fare });
+      }
+      calculateFare();
+    }
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
+    function calculateFare() {
+      const seatsLabel = document.getElementById('selectedSeatsLabel');
+      const baseFareLabel = document.getElementById('baseFareLabel');
+      const discountLabel = document.getElementById('discountLabel');
+      const totalPayableLabel = document.getElementById('totalPayableLabel');
+      const studentChecked = document.getElementById('studentDiscountCheck').checked;
+
+      if (selectedSeats.length === 0) {
+        seatsLabel.innerText = "None";
+        baseFareLabel.innerText = "₹0";
+        discountLabel.innerText = "-₹0";
+        totalPayableLabel.innerText = "₹0";
+        return;
+      }
+
+      const totalBase = selectedSeats.reduce((acc, curr) => acc + curr.price, 0);
+      const discount = studentChecked ? Math.round(totalBase * 0.15) : 0;
+
+      seatsLabel.innerText = selectedSeats.map(s => s.code).join(', ');
+      baseFareLabel.innerText = `₹${totalBase}`;
+      discountLabel.innerText = `-₹${discount}`;
+      totalPayableLabel.innerText = `₹${totalBase - discount}`;
+    }
+
+    function confirmBusBooking() {
+      alert('Booking Confirmed! e-Ticket SMS sent.');
+      closeBusModal();
+    }
+
+    function openModal(id) {
+      const item = manualsData.find(m => m.id === id);
+      if (!item) return;
+      document.getElementById('modalCode').innerText = item.code;
+      document.getElementById('modalTitle').innerText = item.title;
+      document.getElementById('modalDesc').innerText = item.desc;
+      document.getElementById('previewModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('previewModal').classList.add('hidden');
+    }
+
+    // INITIALIZATION
+    document.addEventListener('DOMContentLoaded', () => {
+      init3DScene();
+      init3DTiltEffect();
+      renderManuals();
+      searchBuses();
+    });
+  </script>
 </body>
 </html>
